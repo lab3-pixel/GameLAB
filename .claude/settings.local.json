@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(start \"\" \"C:\\\\Users\\\\Kimberly Badilla\\\\Desktop\\\\JUEGOS\\\\snake.html\")",
+      "Bash(where python *)",
+      "Bash(where node *)",
+      "PowerShell(Unregister-ScheduledTask -TaskName \"RecordatorioAgua_Agua\" -Confirm:$false -ErrorAction SilentlyContinue)",
+      "PowerShell(Unregister-ScheduledTask -TaskName \"RecordatorioAgua_PausaActiva\" -Confirm:$false -ErrorAction SilentlyContinue)",
+      "PowerShell(schtasks /delete /tn \"RecordatorioAgua_Agua\" /f 2>$null)",
+      "PowerShell(schtasks /delete /tn \"RecordatorioAgua_PausaActiva\" /f 2>$null)",
+      "PowerShell(schtasks /delete /tn \"DebugAgua\" /f 2>$null)",
+      "Bash(mkdir -p \"/c/Users/Kimberly Badilla/Desktop/JUEGOS/PausaActiva\")",
+      "Bash(mv \"/c/Users/Kimberly Badilla/Desktop/JUEGOS/RecordatorioAgua/Show-ActiveBreak.ps1\" \"/c/Users/Kimberly Badilla/Desktop/JUEGOS/PausaActiva/Show-ActiveBreak.ps1\")",
+      "Bash(mv \"/c/Users/Kimberly Badilla/Desktop/JUEGOS/RecordatorioAgua/Run-ActiveBreak.vbs\" \"/c/Users/Kimberly Badilla/Desktop/JUEGOS/PausaActiva/Run-ActiveBreak.vbs\")",
+      "Read(//c/Users/Kimberly Badilla/Desktop/JUEGOS/**)",
+      "Bash(mkdir -p \"/c/Users/Kimberly Badilla/Desktop/JUEGOS/RecordatorioAgua/Assets\")",
+      "Bash(ls -la \"/c/Users/Kimberly Badilla/Desktop/\" 2>&1)",
+      "Bash(rmdir \"/c/Users/Kimberly Badilla/Desktop/JUEGOS/PausaActiva\" 2>&1 *)"
+    ]
+  }
+}
