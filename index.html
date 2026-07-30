@@ -1,278 +1,554 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GameLAB - Portal de Juegos y Utilidades</title>
-  <meta name="description" content="Bienvenido a GameLAB, tu portal interactivo de juegos y herramientas de pausa activa.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-dark: #090d16;
-      --card-bg: rgba(22, 31, 49, 0.7);
-      --card-border: rgba(255, 255, 255, 0.1);
-      --accent-cyan: #38bdf8;
-      --accent-purple: #a855f7;
-      --accent-pink: #ec4899;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
-        radial-gradient(at 50% 50%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
-      background-attachment: fixed;
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: 2rem 1rem;
-    }
-
-    header {
-      text-align: center;
-      margin-top: 2rem;
-      margin-bottom: 3rem;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      color: var(--accent-cyan);
-      padding: 0.4rem 1rem;
-      border-radius: 9999px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      backdrop-filter: blur(8px);
-    }
-
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--accent-cyan);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--accent-cyan);
-    }
-
-    h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 3.5rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, var(--accent-cyan) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 1rem;
-    }
-
-    p.subtitle {
-      font-size: 1.125rem;
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    main {
-      width: 100%;
-      max-width: 1000px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 1.5rem;
-      padding: 2rem;
-      backdrop-filter: blur(16px);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(56, 189, 248, 0.4);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.15);
-    }
-
-    .card:hover::before {
-      opacity: 1;
-    }
-
-    .card-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 1rem;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.75rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .card-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--text-main);
-    }
-
-    .card-description {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      width: 100%;
-      padding: 0.875rem 1.5rem;
-      border-radius: 0.75rem;
-      font-weight: 600;
-      font-size: 1rem;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-cyan) 0%, #0284c7 100%);
-      color: #0f172a;
-      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
-    }
-
-    .btn-primary:hover {
-      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
-      transform: scale(1.02);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-main);
-      border: 1px solid var(--card-border);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    footer {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 640px) {
-      h1 {
-        font-size: 2.5rem;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ColorPit 🎨</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --text: #f1f5f9;
+    --accent: #38bdf8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: radial-gradient(circle at top, #1e293b, #0f172a 70%);
+    color: var(--text);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    padding: 20px;
+  }
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+  .panel {
+    background: var(--panel);
+    border-radius: 12px;
+    padding: 8px 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    width: 100%;
+    max-width: 480px;
+    justify-content: center;
+  }
+  .panel h2 {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .option-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .option-row label {
+    font-size: 0.8rem;
+    opacity: 0.85;
+  }
+  input[type="color"] {
+    width: 30px;
+    height: 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+  }
+  .swatches {
+    display: flex;
+    gap: 4px;
+  }
+  .swatch {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4);
+    cursor: pointer;
+  }
+  .swatch:hover { border-color: white; }
+  .swatch.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(56,189,248,0.4);
+  }
+  #bgSwatches .swatch {
+    width: 20px;
+    height: 20px;
+  }
+  canvas {
+    background: #020617;
+    border-radius: 16px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.5);
+    touch-action: none;
+    max-width: 90vw;
+    height: auto;
+  }
+  .stats {
+    display: flex;
+    gap: 20px;
+    font-size: 1rem;
+    margin-top: 4px;
+  }
+  .stats span { color: var(--accent); font-weight: bold; }
+  button {
+    padding: 7px 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #0f172a;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    transition: transform 0.1s ease;
+  }
+  button:hover { transform: scale(1.03); }
+  .hint {
+    width: 100%;
+    font-size: 0.72rem;
+    opacity: 0.6;
+    margin: 0;
+    line-height: 1.3;
+  }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(2,6,23,0.75);
+    border-radius: 16px;
+    text-align: center;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .overlay.show { display: flex; }
+  .canvas-wrap { position: relative; }
+</style>
 </head>
 <body>
+  <h1>🎨 ColorPit</h1>
 
-  <header>
-    <div class="badge">
-      <span class="badge-dot"></span>
-      GameLAB Hub Online
+  <div class="panel">
+    <h2>Personaliza</h2>
+    <div class="option-row">
+      <label for="snakeColor">Serpiente</label>
+      <input type="color" id="snakeColor" value="#22c55e">
+      <div class="swatches" id="snakeSwatches"></div>
     </div>
-    <h1>GameLAB Portal</h1>
-    <p class="subtitle">Explora nuestros juegos interactivos y utilidades de bienestar laboral creados para ti.</p>
-  </header>
-
-  <main>
-    <div class="grid">
-      
-      <!-- Card ColorPit / Snake -->
-      <article class="card">
-        <div>
-          <div class="card-icon">🎨</div>
-          <h2 class="card-title">ColorPit / Snake</h2>
-          <p class="card-description">Juego interactivo de la culebrita con estilo visual vibrante, efectos de sonido y puntuación máxima.</p>
-        </div>
-        <a href="./snake.html" class="btn btn-primary">
-          ▶ ¡Jugar Ahora!
-        </a>
-      </article>
-
-      <!-- Card Pausa Activa -->
-      <article class="card">
-        <div>
-          <div class="card-icon">🧘‍♂️</div>
-          <h2 class="card-title">Pausa Activa</h2>
-          <p class="card-description">Recordatorios y scripts de pausas activas para mantener la energía y salud en la jornada.</p>
-        </div>
-        <a href="./PausaActiva/Show-ActiveBreak.ps1" class="btn btn-secondary" target="_blank">
-          📂 Ver Recursos
-        </a>
-      </article>
-
-      <!-- Card Recordatorio Agua -->
-      <article class="card">
-        <div>
-          <div class="card-icon">💧</div>
-          <h2 class="card-title">Recordatorio de Agua</h2>
-          <p class="card-description">Utilidad interactiva para la hidratación constante durante las horas de trabajo.</p>
-        </div>
-        <a href="./RecordatorioAgua/Show-WaterReminder.ps1" class="btn btn-secondary" target="_blank">
-          📂 Ver Recursos
-        </a>
-      </article>
-
+    <div class="option-row">
+      <label>Fondo</label>
+      <input type="color" id="bgColor" value="#000000" style="display:none">
+      <div class="swatches" id="bgSwatches"></div>
     </div>
-  </main>
+    <button id="rainbowBtn">🌈 Arcoíris</button>
+    <button id="restartBtn">🔄 Reiniciar</button>
+    <button id="musicBtn">🔇 Música</button>
+    <p class="hint">Usa las flechas o WASD para moverte (swipe en móvil). La fruta va rotando sola: naranja, manzana, banano, fresa y limón.</p>
+  </div>
 
-  <footer>
-    &copy; 2026 GameLAB - CCK Brand Hub. Todos los derechos reservados.
-  </footer>
+  <audio id="bgMusic" src="Snake.io Music.mp3" loop preload="auto"></audio>
 
+  <div class="canvas-wrap">
+    <canvas id="game" width="480" height="480"></canvas>
+    <div class="overlay show" id="startOverlay">
+      <div style="font-size:1.4rem;font-weight:bold">🎨 Elige tus colores</div>
+      <div style="font-size:0.85rem;opacity:0.8;max-width:280px">Ajusta la serpiente, la comida y el fondo arriba. Cuando estés listo, ¡a jugar!</div>
+      <button id="startBtn" style="width:auto;padding:10px 24px">▶ Jugar</button>
+    </div>
+    <div class="overlay" id="overlay">
+      <div style="font-size:1.4rem;font-weight:bold">💀 Game Over</div>
+      <div id="finalScore"></div>
+      <button id="overlayRestart" style="width:auto;padding:10px 24px">Jugar de nuevo</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div>Puntos: <span id="score">0</span></div>
+    <div>Mejor: <span id="best">0</span></div>
+  </div>
+
+<script>
+(function () {
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const gridSize = 20;
+  const tileCount = canvas.width / gridSize;
+
+  const snakeColorInput = document.getElementById('snakeColor');
+  const bgColorInput = document.getElementById('bgColor');
+  const rainbowBtn = document.getElementById('rainbowBtn');
+  const restartBtn = document.getElementById('restartBtn');
+  const overlayRestart = document.getElementById('overlayRestart');
+  const overlay = document.getElementById('overlay');
+  const startOverlay = document.getElementById('startOverlay');
+  const startBtn = document.getElementById('startBtn');
+  const musicBtn = document.getElementById('musicBtn');
+  const scoreEl = document.getElementById('score');
+  const bestEl = document.getElementById('best');
+  const finalScoreEl = document.getElementById('finalScore');
+
+  const snakePalette = ['#22c55e', '#38bdf8', '#f43f5e', '#facc15', '#a855f7', '#ffffff'];
+  const bgPalette = ['#ffffff', '#000000', '#808080'];
+
+  // La comida rota automáticamente entre estas frutas; el jugador no la elige
+  const FOOD_FRUITS = [
+    { hex: '#f97316', emoji: '🍊' }, // naranja
+    { hex: '#ef4444', emoji: '🍎' }, // manzana
+    { hex: '#eab308', emoji: '🍌' }, // banano
+    { hex: '#ec4899', emoji: '🍓' }, // fresa
+    { hex: '#84cc16', emoji: '🍋' }  // limón
+  ];
+  let foodIndex = 0;
+  function nextFruit() {
+    const fruit = FOOD_FRUITS[foodIndex % FOOD_FRUITS.length];
+    foodIndex++;
+    return fruit;
+  }
+
+  function buildSwatches(container, colors, input, selectable) {
+    colors.forEach(c => {
+      const el = document.createElement('div');
+      el.className = 'swatch';
+      el.style.background = c;
+      el.title = c;
+      if (selectable && input.value.toLowerCase() === c.toLowerCase()) {
+        el.classList.add('selected');
+      }
+      el.addEventListener('click', () => {
+        input.value = c;
+        input.dispatchEvent(new Event('input'));
+        if (selectable) {
+          container.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+          el.classList.add('selected');
+        }
+      });
+      container.appendChild(el);
+    });
+  }
+  buildSwatches(document.getElementById('snakeSwatches'), snakePalette, snakeColorInput);
+  buildSwatches(document.getElementById('bgSwatches'), bgPalette, bgColorInput, true);
+
+  let rainbowMode = false;
+  rainbowBtn.addEventListener('click', () => {
+    rainbowMode = !rainbowMode;
+    rainbowBtn.textContent = rainbowMode ? '🌈 Arcoíris: ON' : '🌈 Serpiente arcoíris';
+  });
+
+  const BASE_SPEED = 180;   // ms por movimiento al empezar (más alto = más lento)
+  const MIN_SPEED = 60;     // velocidad máxima (ms mínimos entre movimientos)
+  const SPEED_STEP = 15;    // cuánto se acelera cada 10 puntos
+  const POINTS_PER_LEVEL = 10;
+
+  let snake, velocity, nextVelocity, food, score, best, gameOver, speedMs, loopHandle, started;
+
+  function speedForScore(s) {
+    const level = Math.floor(s / POINTS_PER_LEVEL);
+    return Math.max(MIN_SPEED, BASE_SPEED - level * SPEED_STEP);
+  }
+
+  best = Number(localStorage.getItem('snakeBest') || 0);
+  bestEl.textContent = best;
+
+  // --- Música de fondo (archivo local) ---
+  const bgMusic = document.getElementById('bgMusic');
+  let musicOn = false;
+
+  function toggleMusic() {
+    musicOn = !musicOn;
+    musicBtn.textContent = musicOn ? '🔊 Música' : '🔇 Música';
+    if (musicOn) {
+      bgMusic.play().catch(() => {});
+    } else {
+      bgMusic.pause();
+    }
+  }
+  musicBtn.addEventListener('click', toggleMusic);
+
+  function randomFood() {
+    let pos;
+    do {
+      pos = {
+        x: Math.floor(Math.random() * tileCount),
+        y: Math.floor(Math.random() * tileCount)
+      };
+    } while (snake.some(s => s.x === pos.x && s.y === pos.y));
+    const fruit = nextFruit();
+    return { x: pos.x, y: pos.y, hex: fruit.hex, emoji: fruit.emoji };
+  }
+
+  function resetGame() {
+    snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }];
+    velocity = { x: 1, y: 0 };
+    nextVelocity = { x: 1, y: 0 };
+    foodIndex = 0;
+    food = randomFood();
+    score = 0;
+    gameOver = false;
+    speedMs = BASE_SPEED;
+    scoreEl.textContent = score;
+    overlay.classList.remove('show');
+    if (loopHandle) clearTimeout(loopHandle);
+    started = false;
+    startOverlay.classList.add('show');
+  }
+
+  function startGame() {
+    started = true;
+    startOverlay.classList.remove('show');
+    if (loopHandle) clearTimeout(loopHandle);
+    loop();
+  }
+
+  function hue(i) {
+    return `hsl(${(Date.now() / 10 + i * 18) % 360}, 90%, 60%)`;
+  }
+
+  let particles = [];
+
+  function spawnSparkles(cellX, cellY, color) {
+    const cx = cellX * gridSize + gridSize / 2;
+    const cy = cellY * gridSize + gridSize / 2;
+    const count = 18;
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
+      const speed = 1.2 + Math.random() * 3;
+      particles.push({
+        x: cx,
+        y: cy,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        life: 1,
+        decay: 0.025 + Math.random() * 0.02,
+        size: 1.5 + Math.random() * 2.5,
+        color: Math.random() < 0.5 ? color : '#ffffff'
+      });
+    }
+  }
+
+  function updateParticles() {
+    if (particles.length === 0) return;
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.94;
+      p.vy *= 0.94;
+      p.life -= p.decay;
+    });
+    particles = particles.filter(p => p.life > 0);
+  }
+
+  function drawParticles() {
+    particles.forEach(p => {
+      ctx.save();
+      ctx.globalAlpha = Math.max(p.life, 0);
+      ctx.fillStyle = p.color;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function draw() {
+    ctx.fillStyle = bgColorInput.value;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // subtle grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    for (let i = 0; i <= tileCount; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * gridSize, 0);
+      ctx.lineTo(i * gridSize, canvas.height);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, i * gridSize);
+      ctx.lineTo(canvas.width, i * gridSize);
+      ctx.stroke();
+    }
+
+    // food (la fruta rota sola, el jugador no la elige)
+    ctx.font = `${gridSize + 6}px "Segoe UI Emoji", sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(
+      food.emoji,
+      food.x * gridSize + gridSize / 2,
+      food.y * gridSize + gridSize / 2 + 1
+    );
+
+    // snake: cuerpo de círculos superpuestos, cabeza con ojos y lengua
+    for (let i = snake.length - 1; i >= 0; i--) {
+      const segment = snake[i];
+      const isHead = i === 0;
+      const cx = segment.x * gridSize + gridSize / 2;
+      const cy = segment.y * gridSize + gridSize / 2;
+      const t = i / Math.max(snake.length - 1, 1);
+      const radius = isHead ? gridSize / 2 : (gridSize / 2 - 1) * (1 - t * 0.3);
+
+      ctx.fillStyle = rainbowMode ? hue(i) : (isHead ? shade(snakeColorInput.value, 20) : snakeColorInput.value);
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (isHead) {
+        const angle = Math.atan2(velocity.y, velocity.x);
+        const perp = angle + Math.PI / 2;
+
+        // lengua bífida
+        const tongueBase = { x: cx + Math.cos(angle) * radius * 0.9, y: cy + Math.sin(angle) * radius * 0.9 };
+        const tongueTip = { x: cx + Math.cos(angle) * radius * 1.7, y: cy + Math.sin(angle) * radius * 1.7 };
+        ctx.strokeStyle = '#dc2626';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(tongueBase.x, tongueBase.y);
+        ctx.lineTo(tongueTip.x, tongueTip.y);
+        const forkLen = gridSize * 0.14;
+        ctx.moveTo(tongueTip.x, tongueTip.y);
+        ctx.lineTo(tongueTip.x + Math.cos(angle + 0.5) * forkLen, tongueTip.y + Math.sin(angle + 0.5) * forkLen);
+        ctx.moveTo(tongueTip.x, tongueTip.y);
+        ctx.lineTo(tongueTip.x + Math.cos(angle - 0.5) * forkLen, tongueTip.y + Math.sin(angle - 0.5) * forkLen);
+        ctx.stroke();
+
+        // ojos
+        [-1, 1].forEach(side => {
+          const ex = cx + Math.cos(angle) * radius * 0.35 + Math.cos(perp) * radius * 0.5 * side;
+          const ey = cy + Math.sin(angle) * radius * 0.35 + Math.sin(perp) * radius * 0.5 * side;
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(ex, ey, radius * 0.26, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#000000';
+          ctx.beginPath();
+          ctx.arc(ex + Math.cos(angle) * radius * 0.08, ey + Math.sin(angle) * radius * 0.08, radius * 0.12, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+    }
+
+    drawParticles();
+  }
+
+  function shade(hex, percent) {
+    const num = parseInt(hex.replace('#', ''), 16);
+    let r = (num >> 16) + percent;
+    let g = ((num >> 8) & 0x00ff) + percent;
+    let b = (num & 0x0000ff) + percent;
+    r = Math.min(255, Math.max(0, r));
+    g = Math.min(255, Math.max(0, g));
+    b = Math.min(255, Math.max(0, b));
+    return `rgb(${r},${g},${b})`;
+  }
+
+  function update() {
+    velocity = nextVelocity;
+    const head = {
+      x: snake[0].x + velocity.x,
+      y: snake[0].y + velocity.y
+    };
+
+    if (
+      head.x < 0 || head.x >= tileCount ||
+      head.y < 0 || head.y >= tileCount ||
+      snake.some(s => s.x === head.x && s.y === head.y)
+    ) {
+      endGame();
+      return;
+    }
+
+    snake.unshift(head);
+
+    if (head.x === food.x && head.y === food.y) {
+      spawnSparkles(food.x, food.y, food.hex);
+      score++;
+      scoreEl.textContent = score;
+      food = randomFood();
+      speedMs = speedForScore(score);
+    } else {
+      snake.pop();
+    }
+  }
+
+  function endGame() {
+    gameOver = true;
+    if (score > best) {
+      best = score;
+      localStorage.setItem('snakeBest', best);
+      bestEl.textContent = best;
+    }
+    finalScoreEl.textContent = `Puntuación: ${score}`;
+    overlay.classList.add('show');
+  }
+
+  function loop() {
+    if (gameOver) return;
+    update();
+    if (!gameOver) {
+      loopHandle = setTimeout(loop, speedMs);
+    }
+  }
+
+  function renderLoop() {
+    updateParticles();
+    draw();
+    requestAnimationFrame(renderLoop);
+  }
+
+  const keyMap = {
+    ArrowUp: { x: 0, y: -1 }, w: { x: 0, y: -1 }, W: { x: 0, y: -1 },
+    ArrowDown: { x: 0, y: 1 }, s: { x: 0, y: 1 }, S: { x: 0, y: 1 },
+    ArrowLeft: { x: -1, y: 0 }, a: { x: -1, y: 0 }, A: { x: -1, y: 0 },
+    ArrowRight: { x: 1, y: 0 }, d: { x: 1, y: 0 }, D: { x: 1, y: 0 },
+  };
+
+  window.addEventListener('keydown', (e) => {
+    const dir = keyMap[e.key];
+    if (!dir) return;
+    e.preventDefault();
+    if (dir.x === -velocity.x && dir.y === -velocity.y) return;
+    nextVelocity = dir;
+  });
+
+  // swipe support
+  let touchStart = null;
+  canvas.addEventListener('touchstart', (e) => {
+    touchStart = e.touches[0];
+  });
+  canvas.addEventListener('touchend', (e) => {
+    if (!touchStart) return;
+    const dx = e.changedTouches[0].clientX - touchStart.clientX;
+    const dy = e.changedTouches[0].clientY - touchStart.clientY;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      nextVelocity = dx > 0 ? { x: 1, y: 0 } : { x: -1, y: 0 };
+    } else {
+      nextVelocity = dy > 0 ? { x: 0, y: 1 } : { x: 0, y: -1 };
+    }
+    touchStart = null;
+  });
+
+  restartBtn.addEventListener('click', resetGame);
+  overlayRestart.addEventListener('click', resetGame);
+  startBtn.addEventListener('click', startGame);
+
+  resetGame();
+  renderLoop();
+})();
+</script>
 </body>
 </html>
