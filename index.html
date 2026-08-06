@@ -290,7 +290,12 @@
   async function saveScoreToRanking(username, finalScore, snakeColor) {
     if (!supabaseClient || !username || finalScore <= 0) return;
     try {
-      const { error } = await supabaseClient.from('scores').insert({ username, score: finalScore, snake_color: snakeColor });
+      const { error } = await supabaseClient.from('scores').insert({
+        username,
+        score: finalScore,
+        snake_color: snakeColor,
+        snake_color_name: getColorName(snakeColor)
+      });
       saveStatusEl.textContent = error ? 'No se pudo guardar el puntaje.' : '✅ Puntaje guardado en el ranking';
     } catch (e) {
       saveStatusEl.textContent = 'No se pudo guardar el puntaje.';
@@ -328,7 +333,12 @@
       rank.textContent = `#${i + 1}`;
       const dot = document.createElement('span');
       dot.style.cssText = 'display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;';
-      dot.style.background = HEX_COLOR_RE.test(row.snake_color) ? row.snake_color : '#38bdf8';
+      if (row.snake_color === 'rainbow') {
+        dot.style.background = 'conic-gradient(red, orange, yellow, green, blue, violet, red)';
+        dot.title = 'Modo arcoíris';
+      } else {
+        dot.style.background = HEX_COLOR_RE.test(row.snake_color) ? row.snake_color : '#38bdf8';
+      }
       left.appendChild(rank);
       left.appendChild(dot);
       left.appendChild(document.createTextNode(row.username));
@@ -352,6 +362,38 @@
 
   const snakePalette = ['#22c55e', '#38bdf8', '#f43f5e', '#facc15', '#a855f7', '#ffffff'];
   const bgPalette = ['#ffffff', '#000000', '#808080'];
+
+  // Nombre legible del color, para mostrar en el ranking / al exportar los datos
+  const SNAKE_COLOR_NAMES = [
+    { hex: '#22c55e', name: 'Verde' },
+    { hex: '#38bdf8', name: 'Celeste' },
+    { hex: '#f43f5e', name: 'Rojo' },
+    { hex: '#facc15', name: 'Amarillo' },
+    { hex: '#a855f7', name: 'Morado' },
+    { hex: '#ffffff', name: 'Blanco' }
+  ];
+
+  function hexToRgb(hex) {
+    const num = parseInt(hex.replace('#', ''), 16);
+    return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+  }
+
+  function getColorName(value) {
+    if (value === 'rainbow') return 'Arcoíris';
+    if (!HEX_COLOR_RE.test(value)) return 'Desconocido';
+    const target = hexToRgb(value);
+    let best = SNAKE_COLOR_NAMES[0];
+    let bestDist = Infinity;
+    SNAKE_COLOR_NAMES.forEach(c => {
+      const rgb = hexToRgb(c.hex);
+      const dist = (rgb.r - target.r) ** 2 + (rgb.g - target.g) ** 2 + (rgb.b - target.b) ** 2;
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = c;
+      }
+    });
+    return best.name;
+  }
 
   // La comida rota automáticamente entre estas frutas; el jugador no la elige
   const FOOD_FRUITS = [
@@ -648,7 +690,7 @@
     finalScoreEl.textContent = `Puntuación: ${score}`;
     overlay.classList.add('show');
     saveStatusEl.textContent = supabaseClient ? 'Guardando puntaje...' : '';
-    saveScoreToRanking(playerName, score, snakeColorInput.value);
+    saveScoreToRanking(playerName, score, rainbowMode ? 'rainbow' : snakeColorInput.value);
   }
 
   function loop() {

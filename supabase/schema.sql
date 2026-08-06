@@ -5,11 +5,13 @@ create table if not exists public.scores (
   username text not null check (char_length(username) between 1 and 20),
   score integer not null check (score >= 0),
   snake_color text,
+  snake_color_name text,
   created_at timestamptz not null default now()
 );
 
--- Si la tabla ya existía de antes (sin esta columna), esto la agrega sin borrar nada:
+-- Si la tabla ya existía de antes (sin estas columnas), esto las agrega sin borrar nada:
 alter table public.scores add column if not exists snake_color text;
+alter table public.scores add column if not exists snake_color_name text;
 
 create index if not exists scores_score_idx on public.scores (score desc);
 
