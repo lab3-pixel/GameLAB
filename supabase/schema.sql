@@ -4,8 +4,12 @@ create table if not exists public.scores (
   id bigint generated always as identity primary key,
   username text not null check (char_length(username) between 1 and 20),
   score integer not null check (score >= 0),
+  snake_color text,
   created_at timestamptz not null default now()
 );
+
+-- Si la tabla ya existía de antes (sin esta columna), esto la agrega sin borrar nada:
+alter table public.scores add column if not exists snake_color text;
 
 create index if not exists scores_score_idx on public.scores (score desc);
 

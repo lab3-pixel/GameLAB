@@ -287,15 +287,17 @@
 
   usernameInput.value = localStorage.getItem('snakeUsername') || '';
 
-  async function saveScoreToRanking(username, finalScore) {
+  async function saveScoreToRanking(username, finalScore, snakeColor) {
     if (!supabaseClient || !username || finalScore <= 0) return;
     try {
-      const { error } = await supabaseClient.from('scores').insert({ username, score: finalScore });
+      const { error } = await supabaseClient.from('scores').insert({ username, score: finalScore, snake_color: snakeColor });
       saveStatusEl.textContent = error ? 'No se pudo guardar el puntaje.' : '✅ Puntaje guardado en el ranking';
     } catch (e) {
       saveStatusEl.textContent = 'No se pudo guardar el puntaje.';
     }
   }
+
+  const HEX_COLOR_RE = /^#[0-9a-fA-F]{6}$/;
 
   async function loadRanking() {
     rankingList.innerHTML = '<li>Cargando...</li>';
@@ -305,7 +307,7 @@
     }
     const { data, error } = await supabaseClient
       .from('scores')
-      .select('username, score')
+      .select('username, score, snake_color')
       .order('score', { ascending: false })
       .limit(10);
     if (error) {
@@ -319,7 +321,23 @@
     rankingList.innerHTML = '';
     data.forEach((row, i) => {
       const li = document.createElement('li');
-      li.innerHTML = `<span><span class="rank">#${i + 1}</span>${row.username}</span><span>${row.score}</span>`;
+
+      const left = document.createElement('span');
+      const rank = document.createElement('span');
+      rank.className = 'rank';
+      rank.textContent = `#${i + 1}`;
+      const dot = document.createElement('span');
+      dot.style.cssText = 'display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;';
+      dot.style.background = HEX_COLOR_RE.test(row.snake_color) ? row.snake_color : '#38bdf8';
+      left.appendChild(rank);
+      left.appendChild(dot);
+      left.appendChild(document.createTextNode(row.username));
+
+      const right = document.createElement('span');
+      right.textContent = row.score;
+
+      li.appendChild(left);
+      li.appendChild(right);
       rankingList.appendChild(li);
     });
   }
@@ -630,7 +648,7 @@
     finalScoreEl.textContent = `Puntuación: ${score}`;
     overlay.classList.add('show');
     saveStatusEl.textContent = supabaseClient ? 'Guardando puntaje...' : '';
-    saveScoreToRanking(playerName, score);
+    saveScoreToRanking(playerName, score, snakeColorInput.value);
   }
 
   function loop() {
