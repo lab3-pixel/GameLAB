@@ -210,7 +210,6 @@
       <input type="color" id="bgColor" value="#000000" style="display:none">
       <div class="swatches" id="bgSwatches"></div>
     </div>
-    <button id="rainbowBtn">🌈 Arcoíris</button>
     <button id="restartBtn">🔄 Reiniciar</button>
     <button id="musicBtn">🔇 Música</button>
     <button id="rankingBtn">🏆 Ranking</button>
@@ -258,7 +257,6 @@
 
   const snakeColorInput = document.getElementById('snakeColor');
   const bgColorInput = document.getElementById('bgColor');
-  const rainbowBtn = document.getElementById('rainbowBtn');
   const restartBtn = document.getElementById('restartBtn');
   const overlayRestart = document.getElementById('overlayRestart');
   const overlay = document.getElementById('overlay');
@@ -430,14 +428,37 @@
       container.appendChild(el);
     });
   }
-  buildSwatches(document.getElementById('snakeSwatches'), snakePalette, snakeColorInput);
-  buildSwatches(document.getElementById('bgSwatches'), bgPalette, bgColorInput, true);
-
   let rainbowMode = false;
-  rainbowBtn.addEventListener('click', () => {
-    rainbowMode = !rainbowMode;
-    rainbowBtn.textContent = rainbowMode ? '🌈 Arcoíris: ON' : '🌈 Serpiente arcoíris';
+
+  const snakeSwatchesContainer = document.getElementById('snakeSwatches');
+  function selectSnakeSwatch(el) {
+    snakeSwatchesContainer.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  snakePalette.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'swatch';
+    el.style.background = c;
+    el.title = c;
+    if (c.toLowerCase() === snakeColorInput.value.toLowerCase()) el.classList.add('selected');
+    el.addEventListener('click', () => {
+      snakeColorInput.value = c;
+      rainbowMode = false;
+      selectSnakeSwatch(el);
+    });
+    snakeSwatchesContainer.appendChild(el);
   });
+  const rainbowSwatch = document.createElement('div');
+  rainbowSwatch.className = 'swatch';
+  rainbowSwatch.style.background = 'conic-gradient(red, orange, yellow, green, blue, violet, red)';
+  rainbowSwatch.title = 'Arcoíris';
+  rainbowSwatch.addEventListener('click', () => {
+    rainbowMode = true;
+    selectSnakeSwatch(rainbowSwatch);
+  });
+  snakeSwatchesContainer.appendChild(rainbowSwatch);
+
+  buildSwatches(document.getElementById('bgSwatches'), bgPalette, bgColorInput, true);
 
   const BASE_SPEED = 180;   // ms por movimiento al empezar (más alto = más lento)
   const MIN_SPEED = 60;     // velocidad máxima (ms mínimos entre movimientos)
