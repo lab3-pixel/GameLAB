@@ -736,6 +736,7 @@
   };
 
   window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     const dir = keyMap[e.key];
     if (!dir) return;
     e.preventDefault();
